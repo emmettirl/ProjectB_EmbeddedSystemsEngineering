@@ -28,6 +28,35 @@ int color;
 #include "vid.c"
 #include "exceptions.c"
 #include "sdc.c"
+#include "sdc.h"
+
+typedef struct {
+    char name[32];
+    u32 size;
+    u32 start_sector;
+} DirectoryEntry;
+
+void ls() {
+    DirectoryEntry dir[128]; // Assuming a maximum of 128 files
+    int i, j;
+    char buf[512];
+
+    // Read the directory sector (assuming it's stored in sector 0)
+    getSector(0, buf);
+
+    // Copy the directory entries from the buffer
+    memcpy(dir, buf, sizeof(dir));
+
+    // Print the file names and sizes
+    printf("File Name\tSize\n");
+    printf("-------------------------\n");
+    for (i = 0; i < 128; i++) {
+        if (dir[i].name[0] != '\0') { // Check if the entry is valid
+            printf("%s\t%d bytes\n", dir[i].name, dir[i].size);
+        }
+    }
+}
+
 
 void copy_vectors(void) {
     extern u32 vectors_start;
@@ -141,7 +170,7 @@ int main()
    
 
    for (sector=0; sector < N; sector++){
-     printf("READ  sector %d\n", sector);
+     uprintf("READ  sector %d\n", sector);
      for (i=0; i<512; i++)
         rbuf[i] = ' ';
 
@@ -158,11 +187,32 @@ int main()
      if (upeek(up)){
         ugets(up, line1);
         if (line1[0]=='l' && line1[1] =='s'){
-           uprintf("got ls\n");
+			printf("got ls\n");
+			printf("-------------------------\n");
+        	ls();
+        	printf("-------------------------\n");
            }
-        else
-           uprintf("not recognised\n");
-      }
+		else if (line1[0] == 'c' && line1[1] == 'a' && line1[2] == 't' && line1[3] == ' ') {
+            printf("got cat\n");
+            printf("cat command implementation for file: %s\n", line1 + 4);
+            printf("-------------------------\n");
+
+        } else if (line1[0] == 'm' && line1[1] == 'v' && line1[2] == ' ') {
+            printf("got mv\n");
+            printf("mv command implementation for file: %s\n", line1 + 3);
+        	printf("-------------------------\n");
+
+        } else if (line1[0] == 'c' && line1[1] == 'o' && line1[2] == 'p' && line1[3] == 'y' && line1[4] == ' ') {
+            printf("got copy\n");
+            printf("copy command implementation for file: %s\n", line1 + 5);
+            printf("-------------------------\n");
+
+        } else {
+			printf("not recognised\n");
+	        printf("-------------------------\n");
+
+    	}
+    }
    }
    
 }
