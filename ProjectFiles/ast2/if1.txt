@@ -1,0 +1,34 @@
+TranslationUnitDecl 0x2050b60 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x2051058 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x2050db0 '__int128'
+|-TypedefDecl 0x20510b8 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x2050dd0 'unsigned __int128'
+|-TypedefDecl 0x2051148 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x2051110 'char *'
+|   `-BuiltinType 0x2050bf0 'char'
+|-TypedefDecl 0x20513f8 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag [1]'
+| `-ConstantArrayType 0x20513a0 'struct __va_list_tag [1]' 1 
+|   `-RecordType 0x2051220 'struct __va_list_tag'
+|     `-Record 0x2051198 '__va_list_tag'
+`-FunctionDecl 0x2051498 </home/paul/clang-ast/if1.c:1:1, line:8:1> line:1:1 fred 'int ()'
+  `-CompoundStmt 0x209ce10 <col:7, line:8:1>
+    |-DeclStmt 0x20515f0 <line:2:1, col:6>
+    | `-VarDecl 0x2051590 <col:1, col:5> col:5 used y 'int'
+    |-DeclStmt 0x2051678 <line:3:1, col:6>
+    | `-VarDecl 0x2051618 <col:1, col:5> col:5 used x 'int'
+    |-BinaryOperator 0x20516d8 <line:4:1, col:3> 'int' '='
+    | |-DeclRefExpr 0x2051690 <col:1> 'int' lvalue Var 0x2051590 'y' 'int'
+    | `-IntegerLiteral 0x20516b8 <col:3> 'int' 9
+    |-BinaryOperator 0x2051748 <line:5:1, col:3> 'int' '='
+    | |-DeclRefExpr 0x2051700 <col:1> 'int' lvalue Var 0x2051618 'x' 'int'
+    | `-IntegerLiteral 0x2051728 <col:3> 'int' 4
+    `-IfStmt 0x209cde0 <line:6:1, line:7:6>
+      |-<<<NULL>>>
+      |-BinaryOperator 0x20517d0 <line:6:5, col:8> 'int' '=='
+      | |-ImplicitCastExpr 0x20517b8 <col:5> 'int' <LValueToRValue>
+      | | `-DeclRefExpr 0x2051770 <col:5> 'int' lvalue Var 0x2051590 'y' 'int'
+      | `-IntegerLiteral 0x2051798 <col:8> 'int' 9
+      |-BinaryOperator 0x2051840 <line:7:4, col:6> 'int' '='
+      | |-DeclRefExpr 0x20517f8 <col:4> 'int' lvalue Var 0x2051618 'x' 'int'
+      | `-IntegerLiteral 0x2051820 <col:6> 'int' 7
+      `-<<<NULL>>>

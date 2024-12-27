@@ -1,0 +1,29 @@
+TranslationUnitDecl 0x30d6df0 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x30d72e8 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x30d7040 '__int128'
+|-TypedefDecl 0x30d7348 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x30d7060 'unsigned __int128'
+|-TypedefDecl 0x30d73d8 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x30d73a0 'char *'
+|   `-BuiltinType 0x30d6e80 'char'
+|-TypedefDecl 0x30d7688 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag [1]'
+| `-ConstantArrayType 0x30d7630 'struct __va_list_tag [1]' 1 
+|   `-RecordType 0x30d74b0 'struct __va_list_tag'
+|     `-Record 0x30d7428 '__va_list_tag'
+`-FunctionDecl 0x30d7728 </home/paul/compiler/clang-ast/first/t1.c:1:1, line:6:1> line:1:1 fred 'int ()'
+  `-CompoundStmt 0x30d7ac0 <col:7, line:6:1>
+    |-DeclStmt 0x30d7908 <line:2:1, col:8>
+    | |-VarDecl 0x30d7820 <col:1, col:5> col:5 used i 'int'
+    | `-VarDecl 0x30d7890 <col:1, col:7> col:7 used j 'int'
+    |-BinaryOperator 0x30d7968 <line:3:1, col:3> 'int' '='
+    | |-DeclRefExpr 0x30d7920 <col:1> 'int' lvalue Var 0x30d7890 'j' 'int'
+    | `-IntegerLiteral 0x30d7948 <col:3> 'int' 9
+    |-BinaryOperator 0x30d7a40 <line:4:2, col:6> 'int' '='
+    | |-DeclRefExpr 0x30d7990 <col:2> 'int' lvalue Var 0x30d7820 'i' 'int'
+    | `-BinaryOperator 0x30d7a18 <col:4, col:6> 'int' '+'
+    |   |-IntegerLiteral 0x30d79b8 <col:4> 'int' 5
+    |   `-ImplicitCastExpr 0x30d7a00 <col:6> 'int' <LValueToRValue>
+    |     `-DeclRefExpr 0x30d79d8 <col:6> 'int' lvalue Var 0x30d7890 'j' 'int'
+    `-ReturnStmt 0x30d7aa8 <line:5:1, col:8>
+      `-ImplicitCastExpr 0x30d7a90 <col:8> 'int' <LValueToRValue>
+        `-DeclRefExpr 0x30d7a68 <col:8> 'int' lvalue Var 0x30d7820 'i' 'int'

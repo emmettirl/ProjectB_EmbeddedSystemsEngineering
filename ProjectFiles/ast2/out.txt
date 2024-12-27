@@ -1,0 +1,38 @@
+TranslationUnitDecl 0x1d15270 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1d15768 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1d154c0 '__int128'
+|-TypedefDecl 0x1d157c8 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1d154e0 'unsigned __int128'
+|-TypedefDecl 0x1d15858 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1d15820 'char *'
+|   `-BuiltinType 0x1d15300 'char'
+|-TypedefDecl 0x1d15b08 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag [1]'
+| `-ConstantArrayType 0x1d15ab0 'struct __va_list_tag [1]' 1 
+|   `-RecordType 0x1d15930 'struct __va_list_tag'
+|     `-Record 0x1d158a8 '__va_list_tag'
+`-FunctionDecl 0x1d15ba8 </home/paul/clang-ast/t1.c:1:1, line:7:1> line:1:1 ggg 'int ()'
+  `-CompoundStmt 0x1d61438 <col:6, line:7:1>
+    |-DeclStmt 0x1d15d88 <line:2:1, col:9>
+    | |-VarDecl 0x1d15ca0 <col:1, col:5> col:5 used y 'int'
+    | `-VarDecl 0x1d15d10 <col:1, col:7> col:7 used y1 'int'
+    |-BinaryOperator 0x1d15de8 <line:3:1, col:3> 'int' '='
+    | |-DeclRefExpr 0x1d15da0 <col:1> 'int' lvalue Var 0x1d15ca0 'y' 'int'
+    | `-IntegerLiteral 0x1d15dc8 <col:3> 'int' 4
+    |-BinaryOperator 0x1d15ec0 <line:4:1, col:6> 'int' '='
+    | |-DeclRefExpr 0x1d15e10 <col:1> 'int' lvalue Var 0x1d15d10 'y1' 'int'
+    | `-BinaryOperator 0x1d15e98 <col:4, col:6> 'int' '+'
+    |   |-IntegerLiteral 0x1d15e38 <col:4> 'int' 6
+    |   `-ImplicitCastExpr 0x1d15e80 <col:6> 'int' <LValueToRValue>
+    |     `-DeclRefExpr 0x1d15e58 <col:6> 'int' lvalue Var 0x1d15ca0 'y' 'int'
+    `-BinaryOperator 0x1d61410 <line:6:1, col:14> 'int' '='
+      |-DeclRefExpr 0x1d15ee8 <col:1> 'int' lvalue Var 0x1d15ca0 'y' 'int'
+      `-BinaryOperator 0x1d613e8 <col:3, col:14> 'int' '-'
+        |-ParenExpr 0x1d61340 <col:3, col:8> 'int'
+        | `-BinaryOperator 0x1d15f70 <col:4, col:7> 'int' '*'
+        |   |-ImplicitCastExpr 0x1d15f58 <col:4> 'int' <LValueToRValue>
+        |   | `-DeclRefExpr 0x1d15f10 <col:4> 'int' lvalue Var 0x1d15d10 'y1' 'int'
+        |   `-IntegerLiteral 0x1d15f38 <col:7> 'int' 8
+        `-ParenExpr 0x1d613c8 <col:10, col:14> 'int'
+          `-BinaryOperator 0x1d613a0 <col:11, col:13> 'int' '+'
+            |-IntegerLiteral 0x1d61360 <col:11> 'int' 9
+            `-IntegerLiteral 0x1d61380 <col:13> 'int' 8

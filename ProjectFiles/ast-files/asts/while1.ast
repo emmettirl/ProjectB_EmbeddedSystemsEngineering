@@ -1,0 +1,36 @@
+TranslationUnitDecl 0x1c5e270 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x1c5e768 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x1c5e4c0 '__int128'
+|-TypedefDecl 0x1c5e7c8 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x1c5e4e0 'unsigned __int128'
+|-TypedefDecl 0x1c5e858 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x1c5e820 'char *'
+|   `-BuiltinType 0x1c5e300 'char'
+|-TypedefDecl 0x1c5eb08 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag [1]'
+| `-ConstantArrayType 0x1c5eab0 'struct __va_list_tag [1]' 1 
+|   `-RecordType 0x1c5e930 'struct __va_list_tag'
+|     `-Record 0x1c5e8a8 '__va_list_tag'
+`-FunctionDecl 0x1c5eba8 </home/paul/clang-ast/while1.c:1:1, line:8:1> line:1:1 fred 'int ()'
+  `-CompoundStmt 0x1caa3c0 <col:7, line:8:1>
+    |-DeclStmt 0x1c5ed00 <line:2:1, col:6>
+    | `-VarDecl 0x1c5eca0 <col:1, col:5> col:5 used y 'int'
+    |-DeclStmt 0x1c5ed88 <line:3:1, col:6>
+    | `-VarDecl 0x1c5ed28 <col:1, col:5> col:5 used x 'int'
+    |-BinaryOperator 0x1c5ede8 <line:4:1, col:3> 'int' '='
+    | |-DeclRefExpr 0x1c5eda0 <col:1> 'int' lvalue Var 0x1c5eca0 'y' 'int'
+    | `-IntegerLiteral 0x1c5edc8 <col:3> 'int' 9
+    |-BinaryOperator 0x1c5ee58 <line:5:1, col:3> 'int' '='
+    | |-DeclRefExpr 0x1c5ee10 <col:1> 'int' lvalue Var 0x1c5ed28 'x' 'int'
+    | `-IntegerLiteral 0x1c5ee38 <col:3> 'int' 4
+    `-WhileStmt 0x1caa3a0 <line:6:1, line:7:8>
+      |-<<<NULL>>>
+      |-BinaryOperator 0x1c5eee0 <line:6:8, col:10> 'int' '>'
+      | |-ImplicitCastExpr 0x1c5eec8 <col:8> 'int' <LValueToRValue>
+      | | `-DeclRefExpr 0x1c5ee80 <col:8> 'int' lvalue Var 0x1c5eca0 'y' 'int'
+      | `-IntegerLiteral 0x1c5eea8 <col:10> 'int' 2
+      `-BinaryOperator 0x1caa378 <line:7:4, col:8> 'int' '='
+        |-DeclRefExpr 0x1c5ef08 <col:4> 'int' lvalue Var 0x1c5eca0 'y' 'int'
+        `-BinaryOperator 0x1caa350 <col:6, col:8> 'int' '-'
+          |-ImplicitCastExpr 0x1c5ef78 <col:6> 'int' <LValueToRValue>
+          | `-DeclRefExpr 0x1c5ef30 <col:6> 'int' lvalue Var 0x1c5eca0 'y' 'int'
+          `-IntegerLiteral 0x1c5ef58 <col:8> 'int' 1
