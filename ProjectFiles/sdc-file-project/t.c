@@ -65,6 +65,41 @@ void ls() {
     }
 }
 
+void cat(char *filename) {
+    struct sdc_File files[10]; // Assuming a maximum of 10 files
+    int i, num_files;
+    char buf[512];
+
+    getSector(0, buf);
+
+    // Read the number of files
+    memcpy(&num_files, buf, 4);
+
+    // Parse the buffer to extract file entries
+    for (i = 0; i < num_files; i++) {
+        int offset = 4 + i * sizeof(struct sdc_File); // Each entry is 24 bytes
+        if (offset + sizeof(struct sdc_File) > 512) break; // Ensure we don't read beyond the buffer
+        memcpy(&files[i], buf + offset, sizeof(struct sdc_File));
+    }
+
+    // Find the file by name
+    for (i = 0; i < num_files; i++) {
+        if (strcmp(files[i].name, filename) == 0) {
+            // File found, read and print its contents
+            int j;
+            for (j = 0; j < MAX_SECTORS && files[i].sectors[j] != 0; j++) {
+                getSector(files[i].sectors[j], buf);
+                printf("%s", buf);
+            }
+            printf("\n");
+            return;
+        }
+    }
+
+    // File not found
+    printf("File not found: %s\n", filename);
+}
+
 
 void copy_vectors(void) {
     extern u32 vectors_start;
@@ -203,6 +238,7 @@ int main()
 		else if (line1[0] == 'c' && line1[1] == 'a' && line1[2] == 't' && line1[3] == ' ') {
             printf("got cat\n");
             printf("cat command implementation for file: %s\n", line1 + 4);
+            cat(line1 + 4);
             printf("-------------------------\n");
 
         } else if (line1[0] == 'm' && line1[1] == 'v' && line1[2] == ' ') {
