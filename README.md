@@ -11,5 +11,22 @@ The function then calls the appropriate handler function based on the interrupt 
 The handlers called are "timer_handler()", uart0_handler(), uart1_handler(), vid_handler() and sic_handler(). 
 It then clears the interrupt. 
 
+```shell
+cd /home/ubuntu/CLionProjects/ProjectB_EmbeddedSystemsEngineering/ProjectFiles/defender_map_lab
+./mk
+```
+
 
 ## Question 2
+
+
+## Question 3
+### Part A
+
+```shell
+cd /home/ubuntu/CLionProjects/ProjectB_EmbeddedSystemsEngineering/ProjectFiles/sdc-file-project
+gcc -o createfs createfs.c
+./createfs test test1
+qemu-img resize sdimage 16K
+./mk
+```

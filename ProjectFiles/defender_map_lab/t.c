@@ -259,7 +259,7 @@ Draw_all() {
   }
 
   char score[16];
-  sprintf(score, "Score: %d", saved_pacmans);
+  uprintf(score, "Score: %d", saved_pacmans);
   for (i = 0; i < 16 && score[i] != '\0'; i++) {
     kpchar(score[i], 1, 70 + i);
   }
