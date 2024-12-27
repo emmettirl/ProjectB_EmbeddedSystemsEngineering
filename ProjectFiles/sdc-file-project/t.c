@@ -100,6 +100,47 @@ void cat(char *filename) {
     printf("File not found: %s\n", filename);
 }
 
+void mv(char *oldname, char *newname) {
+    struct sdc_File files[10]; // Assuming a maximum of 10 files
+    int i, num_files;
+    char buf[512];
+
+    getSector(0, buf);
+
+    // Read the number of files
+    memcpy(&num_files, buf, 4);
+
+    // Parse the buffer to extract file entries
+    for (i = 0; i < num_files; i++) {
+        int offset = 4 + i * sizeof(struct sdc_File); // Each entry is 24 bytes
+        if (offset + sizeof(struct sdc_File) > 512) break; // Ensure we don't read beyond the buffer
+        memcpy(&files[i], buf + offset, sizeof(struct sdc_File));
+    }
+
+    // Find the file by old name
+    for (i = 0; i < num_files; i++) {
+        if (strcmp(files[i].name, oldname) == 0) {
+            // File found, update its name
+            int j;
+            for (j = 0; j < sizeof(files[i].name) - 1 && newname[j] != '\0'; j++) {
+                files[i].name[j] = newname[j];
+            }
+            files[i].name[j] = '\0'; // Ensure null-termination
+
+            // Write the updated directory entry back to the sector
+            int offset = 4 + i * sizeof(struct sdc_File);
+            memcpy(buf + offset, &files[i], sizeof(struct sdc_File));
+            putSector(0, buf);
+
+            printf("File renamed from %s to %s\n", oldname, newname);
+            return;
+        }
+    }
+
+    // File not found
+    printf("File not found: %s\n", oldname);
+}
+
 
 void copy_vectors(void) {
     extern u32 vectors_start;
@@ -241,12 +282,25 @@ int main()
             cat(line1 + 4);
             printf("-------------------------\n");
 
-        } else if (line1[0] == 'm' && line1[1] == 'v' && line1[2] == ' ') {
-            printf("got mv\n");
-            printf("mv command implementation for file: %s\n", line1 + 3);
-        	printf("-------------------------\n");
-
-        } else if (line1[0] == 'c' && line1[1] == 'o' && line1[2] == 'p' && line1[3] == 'y' && line1[4] == ' ') {
+		} else if (line1[0] == 'm' && line1[1] == 'v' && line1[2] == ' ') {
+    		printf("got mv\n");
+    		char *oldname = line1 + 3;
+    		char *newname = 0;
+    		for (int i = 3; line1[i] != '\0'; i++) {
+        		if (line1[i] == ' ') {
+            		line1[i] = '\0';
+            		newname = line1 + i + 1;
+            		break;
+        		}
+    		}
+    		if (oldname && newname && newname[0] != '\0') {
+        		printf("Renaming file from %s to %s\n", oldname, newname);
+        		mv(oldname, newname);
+    		} else {
+        		printf("Invalid mv command. Usage: mv <oldname> <newname>\n");
+    		}
+    		printf("-------------------------\n");
+		}else if (line1[0] == 'c' && line1[1] == 'o' && line1[2] == 'p' && line1[3] == 'y' && line1[4] == ' ') {
             printf("got copy\n");
             printf("copy command implementation for file: %s\n", line1 + 5);
             printf("-------------------------\n");
