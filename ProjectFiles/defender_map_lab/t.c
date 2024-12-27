@@ -142,6 +142,7 @@ struct sprite sprites[4];
 #define Width 80
 #define Height 60
 int fire;
+
 struct Triangle {
   int x1;
   int y1;
@@ -150,6 +151,7 @@ struct Triangle {
   int x3;
   int y3;
 };
+
 struct Triangle Test = {
   200,
   200,
@@ -158,10 +160,14 @@ struct Triangle Test = {
   280,
   200
 };
+
 #define sgn(x)((x < 0) ? -1 : ((x > 0) ? 1 : 0))
+
 int abs(int a) {
   return a < 0 ? -a : a;
 }
+
+
 void line_fast(int x1, int y1, int x2, int y2) {
   int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
 
@@ -200,6 +206,8 @@ void line_fast(int x1, int y1, int x2, int y2) {
     }
   }
 }
+
+
 checkObstacle(Object * o, int x, int y, int h, int w) {
   //uprintf("obj=%d ox %d oy =%d ow=%d oh=%d\n",Collisions-o,o->x,o->y,o->width,o->height);
   if (y + h >= o -> y && y <= o -> y + o -> height && x + w >= o -> x && x <= o -> x + o -> width)
@@ -207,17 +215,35 @@ checkObstacle(Object * o, int x, int y, int h, int w) {
   return 0;
 }
 
+
 checkPacman(Object * o, int x, int y, int h, int w) {
   //uprintf("x =%d y=%d h=%d w = %d obj=%d ox %d oy =%d ow=%d oh=%d\n",x,y,h,w,pacman-o,o->x,o->y,o->width,o->height);
-  if (y + h >= o -> y && y <= o -> y + o -> height && x + w >= o -> x && x <= o -> x + o -> width)
+  if (y + h >= o -> y && y <= o -> y + o -> height && x + w >= o -> x && x <= o -> x + o -> width) {
     o -> isalive = 2;
-  return 1;
+    return 1;
+  }
   return 0;
 }
-int lastx = 0;
 
+int lastx = 0;
 int xpos = 80;
 int mm = 0;
+
+
+int combined_tiles[18 * 128];
+void initialize_combined_tiles() {
+  for (int j = 0; j < 18; j++) {
+    for (int i = 0; i < 128; i++) {
+      if (pacman_tiles[j * 128 + i] != 0) {
+        combined_tiles[j * 128 + i] = pacman_tiles[j * 128 + i];
+      } else {
+        combined_tiles[j * 128 + i] = Tiles[j * 128 + i];
+      }
+    }
+  }
+}
+
+
 Draw_all() {
   char * p;
   int i = 0, j = 0;
@@ -233,47 +259,28 @@ Draw_all() {
   }
 
   char score[16];
-  uprintf(score, "Score: %d", saved_pacmans);
+  sprintf(score, "Score: %d", saved_pacmans);
   for (i = 0; i < 16 && score[i] != '\0'; i++) {
     kpchar(score[i], 1, 70 + i);
   }
 
-  /* take out the timer value and put in the score e.g. how many pacmans have been saved. */
-
-//  for (i = 0; i < 8; i++) {
-//    kpchar(t -> clock[i], 1, 70 + i);
-//  }
-//  int lx = 0;
 
   /* TODO
+  // Draw all tiles and pacman entities using the combined array
+
   loop 1*/
   for (j = 0; j < 18; j++) {
     for (i = xpos; i < xpos + 40 && i < 120; i++) {
-
-      int tile = Tiles[j * 128 + i];
-
-      if (tile && (i - xpos) * 16 < 624)
-
-        put_tile(j * 16, (i - xpos) * 16, tile, & _binary_tilemap_bmp_start);
-    }
-  }
-  /* loop 2 */
-  // draw all pacman entities
-  for (j = 0; j < 18; j++) {
-    for (i = xpos; i < xpos + 40 && i < 120; i++) {
-
-      int tile = pacman_tiles[j * 128 + i];
-
-      if (tile && (i - xpos) * 16 < 624)
-
-        put_tile(j * 16, (i - xpos) * 16, tile, & _binary_tilemap_bmp_start);
+      int tile = combined_tiles[j * 128 + i];
+      if (tile && (i - xpos) * 16 < 624) {
+        put_tile(j * 16, (i - xpos) * 16, tile, &_binary_tilemap_bmp_start);
+      }
     }
   }
 
   for (i = 1; i < 3; i++) {
     if (i == 2) {
       int x = sprites[i].x - xpos * 16;
-      // uprintf("draw x =%d y = %d\n",x,sprites[i].y);
       if (x > 0 && x < 640)
         show_bmp(sprites[i].p, sprites[i].y, x);
     } else
@@ -281,7 +288,6 @@ Draw_all() {
 
     if (i == 3)
       sprites[i].x += 10;
-
   }
 
   fbmodified = 1;
@@ -361,7 +367,7 @@ int main() {
     pacman[k].width = 17;
   }
 
-  /* TODO
+  /*
   sort the pacman array based on the x coordinate so that the pacman postions are in order.
   You need to do the sorting before the following loop.
   The pacmans and the pacman arrays need to be aligned i.e a given index refers to the same pacman entity in both arrays.
@@ -470,7 +476,6 @@ int main() {
         int check = checkObstacle(Collisions + i, sprites[1].x + xpos * 16, sprites[1].y, sprites[1].h, sprites[1].w);
 
         if (check) {
-          /* TODO */
           /* a collision do not allow the defender to enter into the obstacle */
           uprintf("cnt = %d collision obj %d\n", cnt++, i);
           switch (key) {
@@ -519,6 +524,7 @@ int main() {
            */
           int pacno = catch_pacman(sprites + 2);
         }
+        initialize_combined_tiles();
         Draw_all();
         spriteMove = 0;
       }
