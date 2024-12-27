@@ -141,6 +141,73 @@ void mv(char *oldname, char *newname) {
     printf("File not found: %s\n", oldname);
 }
 
+void copy(char *source, char *destination) {
+    struct sdc_File files[10]; // Assuming a maximum of 10 files
+    int i, num_files;
+    char buf[512];
+
+    getSector(0, buf);
+
+    // Read the number of files
+    memcpy(&num_files, buf, 4);
+
+    // Parse the buffer to extract file entries
+    for (i = 0; i < num_files; i++) {
+        int offset = 4 + i * sizeof(struct sdc_File); // Each entry is 24 bytes
+        if (offset + sizeof(struct sdc_File) > 512) break; // Ensure we don't read beyond the buffer
+        memcpy(&files[i], buf + offset, sizeof(struct sdc_File));
+    }
+
+    // Find the source file by name
+    struct sdc_File *src_file = 0;
+    for (i = 0; i < num_files; i++) {
+        if (strcmp(files[i].name, source) == 0) {
+            src_file = &files[i];
+            break;
+        }
+    }
+
+    if (!src_file) {
+        printf("Source file not found: %s\n", source);
+        return;
+    }
+
+    // Check if the destination file already exists
+    for (i = 0; i < num_files; i++) {
+        if (strcmp(files[i].name, destination) == 0) {
+            printf("Destination file already exists: %s\n", destination);
+            return;
+        }
+    }
+
+    // Create a new file entry for the destination file
+    struct sdc_File dest_file;
+    for (i = 0; i < sizeof(dest_file.name) - 1 && destination[i] != '\0'; i++) {
+        dest_file.name[i] = destination[i];
+    }
+    dest_file.name[i] = '\0'; // Ensure null-termination
+    memcpy(dest_file.sectors, src_file->sectors, sizeof(dest_file.sectors));
+    dest_file.size = src_file->size;
+
+    // Add the new file entry to the list of files
+    if (num_files < 10) {
+        files[num_files] = dest_file;
+        num_files++;
+
+        // Write the updated directory entries back to the sector
+        memcpy(buf, &num_files, 4);
+        for (i = 0; i < num_files; i++) {
+            int offset = 4 + i * sizeof(struct sdc_File);
+            memcpy(buf + offset, &files[i], sizeof(struct sdc_File));
+        }
+        putSector(0, buf);
+
+        printf("File copied from %s to %s\n", source, destination);
+    } else {
+        printf("No space to create new file: %s\n", destination);
+    }
+}
+
 
 void copy_vectors(void) {
     extern u32 vectors_start;
@@ -300,14 +367,29 @@ int main()
         		printf("Invalid mv command. Usage: mv <oldname> <newname>\n");
     		}
     		printf("-------------------------\n");
-		}else if (line1[0] == 'c' && line1[1] == 'o' && line1[2] == 'p' && line1[3] == 'y' && line1[4] == ' ') {
-            printf("got copy\n");
-            printf("copy command implementation for file: %s\n", line1 + 5);
-            printf("-------------------------\n");
+
+        } else if (line1[0] == 'c' && line1[1] == 'o' && line1[2] == 'p' && line1[3] == 'y' && line1[4] == ' ') {
+    		printf("got copy\n");
+    		char *source = line1 + 5;
+    		char *destination = 0;
+    		for (int i = 5; line1[i] != '\0'; i++) {
+        		if (line1[i] == ' ') {
+            		line1[i] = '\0';
+            		destination = line1 + i + 1;
+            		break;
+        		}
+    		}
+    		if (source && destination && destination[0] != '\0') {
+        		printf("Copying file from %s to %s\n", source, destination);
+        		copy(source, destination);
+    		} else {
+        		printf("Invalid copy command. Usage: copy <source> <destination>\n");
+    		}
+    		printf("-------------------------\n");
 
         } else {
-			printf("not recognised\n");
-	        printf("-------------------------\n");
+		printf("not recognised\n");
+	    printf("-------------------------\n");
 
     	}
     }
