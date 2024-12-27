@@ -225,13 +225,25 @@ Draw_all() {
     fb[x] = 0x00000000; // clean screen; all pixels are BLACK
   TIMER * t = & timer[0];
 
-  /* TODO */
+  int saved_pacmans = 0;
+  for (i = 0; i < pacman_size; i++) {
+    if (pacmans[i].isalive == 2) {
+      saved_pacmans++;
+    }
+  }
+
+  char score[16];
+  uprintf(score, "Score: %d", saved_pacmans);
+  for (i = 0; i < 16 && score[i] != '\0'; i++) {
+    kpchar(score[i], 1, 70 + i);
+  }
+
   /* take out the timer value and put in the score e.g. how many pacmans have been saved. */
 
-  for (i = 0; i < 8; i++) {
-    kpchar(t -> clock[i], 1, 70 + i);
-  }
-  int lx = 0;
+//  for (i = 0; i < 8; i++) {
+//    kpchar(t -> clock[i], 1, 70 + i);
+//  }
+//  int lx = 0;
 
   /* TODO
   loop 1*/
@@ -278,6 +290,7 @@ Draw_all() {
 
 int counter;
 int main() {
+
   int i, j;
   char line[128], string[32];
   UART * up;
@@ -353,6 +366,33 @@ int main() {
   You need to do the sorting before the following loop.
   The pacmans and the pacman arrays need to be aligned i.e a given index refers to the same pacman entity in both arrays.
   */
+  uprintf("Pacman array original state\n");
+  for (int k = 0; k < pacman_size; k++) {
+    uprintf("Pacman %d x=%d y=%d\n", k, pacman[k].x, pacman[k].y);
+  }
+
+  for (int i = 0; i < pacman_size - 1; i++) {
+    for (int j = 0; j < pacman_size - i - 1; j++) {
+      if (pacman[j].x > pacman[j + 1].x) {
+        // Swap pacman[j] and pacman[j + 1]
+        Object temp = pacman[j];
+        pacman[j] = pacman[j + 1];
+        pacman[j + 1] = temp;
+
+        // Swap pacmans[j] and pacmans[j + 1] to keep them aligned
+        struct Pacman tempPacman = pacmans[j];
+        pacmans[j] = pacmans[j + 1];
+        pacmans[j + 1] = tempPacman;
+      }
+    }
+  }
+
+  uprintf("Pacman array sorted state\n");
+  for (int k = 0; k < pacman_size; k++) {
+    uprintf("Pacman %d x=%d y=%d\n", k, pacman[k].x, pacman[k].y);
+  }
+
+
   for (j = 0; j < 18; j++) {
     for (i = 0; i < 120; i++) {
       int tile = pacman_tiles[j * 128 + i];
@@ -433,6 +473,21 @@ int main() {
           /* TODO */
           /* a collision do not allow the defender to enter into the obstacle */
           uprintf("cnt = %d collision obj %d\n", cnt++, i);
+          switch (key) {
+          case 's':
+            xpos++;
+            break;
+          case 'd':
+            xpos--;
+            break;
+          case 'w':
+            sprites[1].y += 16;
+            break;
+          case 'e':
+            sprites[1].y -= 16;
+            break;
+          }
+          move = 0; // Cancel the move
           }
         }
       }
@@ -448,6 +503,7 @@ int main() {
           pacman_tiles[tile_y * 128 + tile_x] = 0; // Set the tile to 0 to remove the Pacman
           pacmans[i].isalive = 2; // Mark the Pacman as saved
           uprintf("cnt = %d pacman obj %d\n", cnt++, i);
+          uprintf("pacman %d saved\n", i);
 
         }
       }
