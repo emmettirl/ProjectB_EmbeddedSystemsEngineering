@@ -88,3 +88,6 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+/ProjectFiles/defender_map_lab/t.bin
+/ProjectFiles/defender_map_lab/t.o
+/ProjectFiles/defender_map_lab/t.elf

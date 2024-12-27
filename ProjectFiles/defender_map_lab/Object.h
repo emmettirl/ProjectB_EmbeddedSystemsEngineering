@@ -18,5 +18,6 @@ typedef struct {
     Point* polygon;
     int polygon_count;
     char* properties;
+    int isalive;
 } Object;
 
