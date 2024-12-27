@@ -25,8 +25,8 @@ cd /home/ubuntu/CLionProjects/ProjectB_EmbeddedSystemsEngineering/ProjectFiles/d
 
 ```shell
 cd /home/ubuntu/CLionProjects/ProjectB_EmbeddedSystemsEngineering/ProjectFiles/sdc-file-project
-gcc -o createfs createfs.c
+gcc createfs.c -o createfs
 ./createfs test test1
-qemu-img resize sdimage 16K
+qemu-img resize -f raw sdimage 16K
 ./mk
 ```

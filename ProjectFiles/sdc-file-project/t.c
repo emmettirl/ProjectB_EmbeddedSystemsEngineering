@@ -29,6 +29,7 @@ int color;
 #include "exceptions.c"
 #include "sdc.c"
 #include "sdc.h"
+#include "filesystem.h"
 
 typedef struct {
     char name[32];
@@ -37,22 +38,29 @@ typedef struct {
 } DirectoryEntry;
 
 void ls() {
-    DirectoryEntry dir[128]; // Assuming a maximum of 128 files
-    int i, j;
+    struct sdc_File files[10]; // Assuming a maximum of 10 files
+    int i, num_files;
     char buf[512];
 
-    // Read the directory sector (assuming it's stored in sector 0)
-    getSector(0, buf);
-
-    // Copy the directory entries from the buffer
-    memcpy(dir, buf, sizeof(dir));
-
-    // Print the file names and sizes
     printf("File Name\tSize\n");
     printf("-------------------------\n");
-    for (i = 0; i < 128; i++) {
-        if (dir[i].name[0] != '\0') { // Check if the entry is valid
-            printf("%s\t%d bytes\n", dir[i].name, dir[i].size);
+
+    getSector(0, buf);
+
+    // Read the number of files
+    memcpy(&num_files, buf, 4);
+
+    // Parse the buffer to extract file entries
+    for (i = 0; i < num_files; i++) {
+        int offset = 4 + i * sizeof(struct sdc_File); // Each entry is 24 bytes
+        if (offset + sizeof(struct sdc_File) > 512) break; // Ensure we don't read beyond the buffer
+        memcpy(&files[i], buf + offset, sizeof(struct sdc_File));
+    }
+
+    // Print the file names and sizes
+    for (i = 0; i < num_files; i++) {
+        if (files[i].name[0] != '\0') { // Check if the entry is valid
+            printf("%s\t%d bytes\n", files[i].name, files[i].size);
         }
     }
 }

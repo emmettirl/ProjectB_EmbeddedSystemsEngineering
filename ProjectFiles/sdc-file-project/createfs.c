@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include <string.h>
 #include "filesystem.h"
 
 struct Master master;
 char arr[512];
-copy(char *p,char *p1, int sz){
+void copy(char *p,char *p1, int sz){
 for (int i=0;i<sz;i++){
   p[i]=p1[i];
   }
@@ -14,7 +15,7 @@ int zero(){
 		arr[i]=0;
 }
 
-main(int argc,char *argv[]){
+int main(int argc,char *argv[]){
 
    if ( argc < 2)
       return printf("need some file names as arguments\n");
